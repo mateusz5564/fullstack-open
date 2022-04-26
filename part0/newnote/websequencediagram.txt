@@ -1,0 +1,5 @@
+we posted a new note, then the server 
+redirected us back to the same page.
+That caused another GET request and
+all the subsequent requests related to 
+that page
