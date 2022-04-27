@@ -1,0 +1,10 @@
+title new note SPA
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+server-->browser: 201 Created / new item data
+
+note over browser:
+successful POST request triggers callback responsible 
+for rendering the newly created note, there's no need
+for the page to reload
+end note
+
