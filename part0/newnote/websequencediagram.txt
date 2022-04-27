@@ -1,5 +1,15 @@
-we posted a new note, then the server 
+title new note
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/new_note
+server-->browser: 302 Redirect
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/notes
+server-->browser: HTML
+
+note over browser:
+We posted a new note, then the server 
 redirected us back to the same page.
 That caused another GET request and
 all the subsequent requests related to 
-that page
+the notes page
+end note
+
