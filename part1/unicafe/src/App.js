@@ -8,6 +8,9 @@ const App = () => {
   const [bad, setBad] = useState(0);
 
   const handleButtonClick = (state, setState) => () => setState(state + 1);
+  const all = good + neutral + bad;
+  const average = (good * 1 + bad * -1) / all;
+  const positivePercent = good / all * 100;
 
   return (
     <div>
@@ -20,6 +23,9 @@ const App = () => {
       <p>good {good} </p>
       <p>neutral {neutral} </p>
       <p>bad {bad}</p>
+      <p>all {all}</p>
+      <p>average {average}</p>
+      <p>positive {positivePercent}%</p>
     </div>
   );
 };
