@@ -4,9 +4,10 @@ const Button = ({ onClick, children }) => <button onClick={onClick}>{children}</
 
 const StatisticLine = ({ text, value }) => {
   return (
-    <p>
-      {text} {value}
-    </p>
+    <>
+      <td>{text}</td>
+      <td>{value}</td>
+    </>
   );
 };
 
@@ -22,12 +23,28 @@ const Statistics = ({ good, neutral, bad }) => {
   return (
     <>
       <h2>statistics</h2>
-      <StatisticLine text={"good"} value={good} />
-      <StatisticLine text={"neutral"} value={neutral} />
-      <StatisticLine text={"bad"} value={bad} />
-      <StatisticLine text={"all"} value={all} />
-      <StatisticLine text={"average"} value={average} />
-      <StatisticLine text={"positive"} value={positivePercent} />
+      <table>
+        <tbody>
+          <tr>
+            <StatisticLine text={"good"} value={good} />
+          </tr>
+          <tr>
+            <StatisticLine text={"neutral"} value={neutral} />
+          </tr>
+          <tr>
+            <StatisticLine text={"bad"} value={bad} />
+          </tr>
+          <tr>
+            <StatisticLine text={"all"} value={all} />
+          </tr>
+          <tr>
+            <StatisticLine text={"average"} value={average} />
+          </tr>
+          <tr>
+            <StatisticLine text={"positive"} value={positivePercent} />
+          </tr>
+        </tbody>
+      </table>
     </>
   );
 };
