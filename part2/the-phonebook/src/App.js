@@ -25,27 +25,55 @@ const App = () => {
 
   const personsToShow = nameSearch.length > 0 ? getPersonsByName() : persons;
 
-  const addPerson = e => {
+  const clearForm = () => {
+    setNewName("");
+    setNewNumber("");
+  };
+
+  const updatePerson = existingPerson => {
+    if (
+      window.confirm(
+        `${newName} is already added to phonebook, replace the old number with a new one?`
+      )
+    ) {
+      personsService.update({ ...existingPerson, number: newNumber }).then(updatedPerson => {
+        const personIndex = persons.findIndex(person => person.id === updatedPerson.id);
+        const updatedPersons = [...persons];
+        updatedPersons[personIndex] = updatedPerson;
+        clearForm();
+        setPersons(updatedPersons);
+      });
+    }
+  };
+
+  const addPerson = () => {
+    const newPerson = {
+      name: newName,
+      number: newNumber,
+    };
+
+    personsService.create(newPerson).then(person => {
+      clearForm();
+      setPersons(persons.concat(person));
+    });
+  };
+
+  const handleSubmit = e => {
     e.preventDefault();
 
-    if (persons.some(person => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`);
+    if (!newName || !newNumber) {
+      alert("Insert name and number");
       return;
     }
 
-    if (newName && newNumber) {
-      const newPerson = {
-        name: newName,
-        number: newNumber,
-      };
+    const existingPerson = persons.find(
+      person => person.name.toLocaleLowerCase() === newName.toLocaleLowerCase()
+    );
 
-      personsService.create(newPerson).then(person => {
-        setPersons(persons.concat(person));
-        setNewName("");
-        setNewNumber("");
-      });
+    if (existingPerson) {
+      updatePerson(existingPerson);
     } else {
-      alert("Insert name and number");
+      addPerson();
     }
   };
 
@@ -66,7 +94,7 @@ const App = () => {
 
       <h2>add a new</h2>
       <PersonForm
-        onSubmit={addPerson}
+        onSubmit={handleSubmit}
         newName={newName}
         setNewName={setNewName}
         newNumber={newNumber}
