@@ -49,6 +49,16 @@ const App = () => {
     }
   };
 
+  const deletePerson = person => {
+    if (window.confirm(`Do you want to delete ${person.name}?`)) {
+      personsService.remove(person.id).then(res => {
+        if (res.status === 200) {
+          setPersons(persons.filter(el => el.id !== person.id));
+        }
+      });
+    }
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -64,7 +74,7 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons persons={personsToShow} />
+      <Persons persons={personsToShow} onDelete={deletePerson} />
     </div>
   );
 };
