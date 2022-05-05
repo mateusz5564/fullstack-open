@@ -1,4 +1,6 @@
-const Country = ({ name, capital, area, languages }) => {
+import WeatherCapital from "./WeatherCapital";
+
+const Country = ({ name, capital, capitalCords, area, languages }) => {
   return (
     <article>
       <h1>{name}</h1>
@@ -15,6 +17,8 @@ const Country = ({ name, capital, area, languages }) => {
           <li key={language[1]}>{language[1]}</li>
         ))}
       </ul>
+
+      <WeatherCapital capital={capital} capitalCords={capitalCords} />
     </article>
   );
 };

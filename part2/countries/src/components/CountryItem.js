@@ -17,6 +17,7 @@ const CountryItem = ({ country }) => {
           capital={country.capital[0]}
           area={country.area}
           languages={country.languages}
+          capitalCords={country.capitalInfo.latlng}
         />
       )}
     </div>

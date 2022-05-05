@@ -33,6 +33,7 @@ function App() {
           capital={countriesToShow[0].capital[0]}
           area={countriesToShow[0].area}
           languages={countriesToShow[0].languages}
+          capitalCords={countriesToShow[0].capitalInfo.latlng}
         />
       )}
       {countriesToShow.length <= 10 && countriesToShow.length > 1 && <Countries countries={countriesToShow} />}
