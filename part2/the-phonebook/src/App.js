@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 import PersonForm from "./components/PersonForm";
 import Filter from "./components/Filter";
 import Persons from "./components/Persons";
+import Notification from "./components/Notification";
 import personsService from "./services/persons";
+import "./index.css";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -10,6 +12,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [nameSearch, setNameSearch] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
 
   useEffect(() => {
     personsService.getAll().then(persons => {
@@ -30,6 +33,19 @@ const App = () => {
     setNewNumber("");
   };
 
+  const addPerson = () => {
+    const newPerson = {
+      name: newName,
+      number: newNumber,
+    };
+
+    personsService.create(newPerson).then(person => {
+      clearForm();
+      setPersons(persons.concat(person));
+      setSuccessMsg(`Added ${person.name}`);
+    });
+  };
+
   const updatePerson = existingPerson => {
     if (
       window.confirm(
@@ -42,20 +58,9 @@ const App = () => {
         updatedPersons[personIndex] = updatedPerson;
         clearForm();
         setPersons(updatedPersons);
+        setSuccessMsg(`${updatedPerson.name}'s number updated`)
       });
     }
-  };
-
-  const addPerson = () => {
-    const newPerson = {
-      name: newName,
-      number: newNumber,
-    };
-
-    personsService.create(newPerson).then(person => {
-      clearForm();
-      setPersons(persons.concat(person));
-    });
   };
 
   const handleSubmit = e => {
@@ -90,6 +95,11 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      {successMsg ? (
+        <Notification type="success" reset={() => setSuccessMsg("")}>
+          {successMsg}
+        </Notification>
+      ) : null}
       <Filter nameSearch={nameSearch} setNameSearch={setNameSearch} />
 
       <h2>add a new</h2>
