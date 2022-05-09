@@ -12,7 +12,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [nameSearch, setNameSearch] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
+  const [notification, setNotification] = useState({ type: "success", message: "" });
 
   useEffect(() => {
     personsService.getAll().then(persons => {
@@ -42,7 +42,7 @@ const App = () => {
     personsService.create(newPerson).then(person => {
       clearForm();
       setPersons(persons.concat(person));
-      setSuccessMsg(`Added ${person.name}`);
+      setNotification({ type: "success", message: `Added ${person.name}` });
     });
   };
 
@@ -58,7 +58,7 @@ const App = () => {
         updatedPersons[personIndex] = updatedPerson;
         clearForm();
         setPersons(updatedPersons);
-        setSuccessMsg(`${updatedPerson.name}'s number updated`)
+        setNotification({ type: "success", message: `${updatedPerson.name}'s number updated` });
       });
     }
   };
@@ -84,20 +84,34 @@ const App = () => {
 
   const deletePerson = person => {
     if (window.confirm(`Do you want to delete ${person.name}?`)) {
-      personsService.remove(person.id).then(res => {
-        if (res.status === 200) {
-          setPersons(persons.filter(el => el.id !== person.id));
-        }
-      });
+      personsService
+        .remove(person.id)
+        .then(res => {
+          if (res.status === 200) {
+            setPersons(persons.filter(el => el.id !== person.id));
+          }
+        })
+        .catch(err => {
+          if (err.response.status === 404) {
+            setNotification({
+              type: "error",
+              message: `Information of ${person.name} has already been removed from server`,
+            });
+            setPersons(persons.filter(el => el.id !== person.id));
+          }
+        });
     }
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
-      {successMsg ? (
-        <Notification type="success" reset={() => setSuccessMsg("")}>
-          {successMsg}
+      {notification.message ? (
+        <Notification
+          type={notification.type}
+          reset={() => setNotification({ ...notification, message: "" })}
+        >
+          {notification.message}
         </Notification>
       ) : null}
       <Filter nameSearch={nameSearch} setNameSearch={setNameSearch} />

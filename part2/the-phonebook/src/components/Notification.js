@@ -6,7 +6,6 @@ const Notification = ({ children, reset, type }) => {
 
   useEffect(() => {
     if (timeout.current) {
-      console.log("clearing");
       clearTimeout(timeout.current);
     }
 
