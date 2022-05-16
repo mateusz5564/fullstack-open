@@ -71,15 +71,13 @@ const App = () => {
       return;
     }
 
-    const existingPerson = persons.find(
-      person => person.name.toLocaleLowerCase() === newName.toLocaleLowerCase()
-    );
-
-    if (existingPerson) {
-      updatePerson(existingPerson);
-    } else {
-      addPerson();
-    }
+    personsService.getByName(newName).then(existingPerson => {
+      if (existingPerson.length) {
+        updatePerson(existingPerson[0]);
+      } else {
+        addPerson();
+      }
+    });
   };
 
   const deletePerson = person => {
