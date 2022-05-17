@@ -39,11 +39,16 @@ const App = () => {
       number: newNumber,
     };
 
-    personsService.create(newPerson).then(person => {
-      clearForm();
-      setPersons(persons.concat(person));
-      setNotification({ type: "success", message: `Added ${person.name}` });
-    });
+    personsService
+      .create(newPerson)
+      .then(person => {
+        clearForm();
+        setPersons(persons.concat(person));
+        setNotification({ type: "success", message: `Added ${person.name}` });
+      })
+      .catch(err => {
+        setNotification({ type: "error", message: err.response.data.error });
+      });
   };
 
   const updatePerson = existingPerson => {
@@ -52,14 +57,19 @@ const App = () => {
         `${newName} is already added to phonebook, replace the old number with a new one?`
       )
     ) {
-      personsService.update({ ...existingPerson, number: newNumber }).then(updatedPerson => {
-        const personIndex = persons.findIndex(person => person.id === updatedPerson.id);
-        const updatedPersons = [...persons];
-        updatedPersons[personIndex] = updatedPerson;
-        clearForm();
-        setPersons(updatedPersons);
-        setNotification({ type: "success", message: `${updatedPerson.name}'s number updated` });
-      });
+      personsService
+        .update({ ...existingPerson, number: newNumber })
+        .then(updatedPerson => {
+          const personIndex = persons.findIndex(person => person.id === updatedPerson.id);
+          const updatedPersons = [...persons];
+          updatedPersons[personIndex] = updatedPerson;
+          clearForm();
+          setPersons(updatedPersons);
+          setNotification({ type: "success", message: `${updatedPerson.name}'s number updated` });
+        })
+        .catch(err => {
+          setNotification({ type: "error", message: err.response.data.error });
+        });
     }
   };
 
