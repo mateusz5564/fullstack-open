@@ -4,7 +4,7 @@ const { listWithOneBlog, blogs } = require("./blogsMock");
 describe("favorite blog", () => {
   test("of empty list is null", () => {
     const result = listHelper.favoriteBlog([]);
-    expect(result).toEqual(null);
+    expect(result).toBe(null);
   });
 
   test("when list has only one blog equals that blog", () => {

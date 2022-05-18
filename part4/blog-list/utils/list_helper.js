@@ -9,23 +9,42 @@ const totalLikes = blogs => {
 const favoriteBlog = blogs => {
   if (blogs.length === 0) return null;
 
-  let favoriteBlog = blogs[0];
-
-  blogs.forEach(blog => {
-    if (blog.likes > favoriteBlog.likes) {
-      favoriteBlog = blog;
-    }
+  const { title, author, likes } = blogs.reduce((prevBlog, currentBlog) => {
+    return currentBlog.likes > prevBlog.likes ? currentBlog : prevBlog;
   });
 
   return {
-    title: favoriteBlog.title,
-    author: favoriteBlog.author,
-    likes: favoriteBlog.likes,
+    title,
+    author,
+    likes,
   };
+};
+
+const mostBlogs = blogs => {
+  if (blogs.length === 0) return null;
+
+  const numberOfBlogsByAuthor = blogs.reduce((acc, current) => {
+    !acc[current.author] ? (acc[current.author] = 1) : acc[current.author]++;
+    return acc;
+  }, {});
+
+  let authorWithMostBlogs = { author: "", blogs: 0 };
+
+  for (author in numberOfBlogsByAuthor) {
+    if (numberOfBlogsByAuthor[author] > authorWithMostBlogs.blogs) {
+      authorWithMostBlogs = {
+        author,
+        blogs: numberOfBlogsByAuthor[author],
+      };
+    }
+  }
+
+  return authorWithMostBlogs;
 };
 
 module.exports = {
   dummy,
   favoriteBlog,
+  mostBlogs,
   totalLikes,
 };
