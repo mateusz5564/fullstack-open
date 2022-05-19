@@ -53,7 +53,6 @@ const mostLikes = blogs => {
   }, {});
 
   let authorWithMostLikes = { author: "", likes: 0 };
-  console.log(numberOfLikesByAuthor)
 
   for (author in numberOfLikesByAuthor) {
     if (numberOfLikesByAuthor[author] > authorWithMostLikes.likes) {

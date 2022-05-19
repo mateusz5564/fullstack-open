@@ -40,9 +40,30 @@ test("return blogs in json format", async () => {
 });
 
 test("return all blogs", async () => {
-  const res = await api.get('/api/blogs')
-  expect(res.body).toHaveLength(initialBlogs.length)
-})
+  const res = await api.get("/api/blogs");
+  expect(res.body).toHaveLength(initialBlogs.length);
+});
+
+test("creates a new blog", async () => {
+  const newBlog = {
+    title: "TDD harms architecture",
+    author: "Robert C. Martin",
+    url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
+    likes: 0,
+  };
+
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(201)
+    .expect("Content-Type", /application\/json/);
+
+  const res = await api.get("/api/blogs");
+  expect(res.body).toHaveLength(initialBlogs.length + 1);
+
+  const titles = res.body.map(blog => blog.title);
+  expect(titles).toContain("TDD harms architecture");
+});
 
 afterAll(() => {
   mongoose.connection.close();
