@@ -1,3 +1,4 @@
+const { application } = require("express");
 const mongoose = require("mongoose");
 const supertest = require("supertest");
 const app = require("../app");
@@ -63,6 +64,17 @@ test("creates a new blog", async () => {
 
   const titles = res.body.map(blog => blog.title);
   expect(titles).toContain("TDD harms architecture");
+});
+
+test("deletes a blog by id", async () => {
+  const blogsBefore = await api.get("/api/blogs").expect(200);
+  const idToDelete = blogsBefore.body[0]._id;
+
+  await api.delete(`/api/blogs/${idToDelete}`).expect(204);
+
+  const blogsAfter = await api.get("/api/blogs").expect(200);
+  const ids = blogsAfter.body.map(blog => blog._id);
+  expect(ids).not.toContain(idToDelete);
 });
 
 afterAll(() => {
