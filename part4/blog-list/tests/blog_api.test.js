@@ -77,6 +77,17 @@ test("deletes a blog by id", async () => {
   expect(ids).not.toContain(idToDelete);
 });
 
+test("updated a blog by id", async () => {
+  const blogsBefore = await api.get("/api/blogs").expect(200);
+  const idToUpdate = blogsBefore.body[0]._id;
+
+  await api.put(`/api/blogs/${idToUpdate}`).send({ likes: 22 }).expect(200);
+
+  const blogsAfter = await api.get("/api/blogs").expect(200);
+  const updatedBlog = blogsAfter.body.find(blog => blog._id === idToUpdate);
+  expect(updatedBlog).toHaveProperty("likes", 22);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
