@@ -1,24 +1,43 @@
 const router = require("express").Router();
+const jwt = require("jsonwebtoken");
 const Blog = require("../models/blog");
-const User = require('../models/user');
+const User = require("../models/user");
+
+const getTokenFrom = request => {
+  const authorization = request.get('authorization')
+  if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
+    return authorization.substring(7);
+  } else {
+    return null;
+  }
+};
 
 router.get("/", async (request, response) => {
-  const blogs = await Blog.find({}).populate('user', {'name': 1, 'username': 1})
+  const blogs = await Blog.find({}).populate("user", { name: 1, username: 1 });
   response.json(blogs);
 });
 
 router.post("/", async (request, response) => {
-  const newBlog = new Blog(request.body);
+  const token = getTokenFrom(request);
 
-  const user = await User.findOne({});
-  newBlog.user = user._id; 
+  try {
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
-  const createdBlog = await newBlog.save();
+    const newBlog = new Blog(request.body);
+    const user = await User.findOne({ username: decodedToken.username });
+    newBlog.user = user._id;
 
-  user.blogs = user.blogs.concat(createdBlog._id)
-  await user.save();
+    const createdBlog = await newBlog.save();
 
-  response.status(201).json(createdBlog);
+    user.blogs = user.blogs.concat(createdBlog._id);
+    await user.save();
+
+    response.status(201).json(createdBlog);
+  } catch (e) {
+    if (e.name === "JsonWebTokenError") {
+      response.status(401).json({ error: "unathorized, this action requires authorization" });
+    }
+  }
 });
 
 router.put("/:id", async (request, response) => {
