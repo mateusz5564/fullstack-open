@@ -8,6 +8,11 @@ body {
   padding: 10px;
 }
 
+.like-btn {
+  background-color: blue;
+  color: white;
+}
+
 .notification {
   background-color: lightgray;
   padding: 10px;

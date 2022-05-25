@@ -99,11 +99,20 @@ const App = () => {
     newBlogToggleBtnRef.current.toggleVisibility();
   };
 
+  const likeBlog = async blog => {
+    const updatedBlog = await blogService.update(blog);
+    showNotification("success", `you liked ${updatedBlog.title} by ${updatedBlog.author}`);
+    const blogIndex = blogs.findIndex(blog => blog.id === updatedBlog.id);
+    const newBlogs = [...blogs];
+    newBlogs[blogIndex] = updatedBlog;
+    setBlogs(newBlogs);
+  };
+
   const blogsList = () => {
     return (
       <div>
         {blogs.map(blog => (
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} likeBlog={likeBlog} />
         ))}
       </div>
     );
