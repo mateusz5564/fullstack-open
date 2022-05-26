@@ -1,10 +1,16 @@
 import { useState } from "react";
 
-const Blog = ({ blog, likeBlog }) => {
+const Blog = ({ blog, likeBlog, user, remove }) => {
   const [showDetails, setShowDetails] = useState(false);
 
   const toggleDetails = () => {
     setShowDetails(!showDetails);
+  };
+
+  const handleDelete = () => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      remove(blog);
+    }
   };
 
   return (
@@ -19,6 +25,11 @@ const Blog = ({ blog, likeBlog }) => {
           <p>{blog.url}</p>
           <p>likes {blog.likes}</p>
           <p>{blog.author}</p>
+          {user.username === blog.user.username && (
+            <button className="remove-btn" onClick={handleDelete}>
+              remove
+            </button>
+          )}
         </>
       )}
     </div>

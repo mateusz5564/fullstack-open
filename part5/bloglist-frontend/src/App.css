@@ -13,6 +13,11 @@ body {
   color: white;
 }
 
+.remove-btn {
+  background-color: red;
+  color: white;
+}
+
 .notification {
   background-color: lightgray;
   padding: 10px;

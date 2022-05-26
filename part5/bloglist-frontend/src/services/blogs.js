@@ -7,17 +7,16 @@ const setToken = newToken => {
   token = `Bearer ${newToken}`;
 };
 
-const config = {
-  headers: { Authorization: token },
-};
-
 const getAll = () => {
   const request = axios.get(baseUrl);
   return request.then(response => response.data);
 };
 
 const create = newBlog => {
-  const request = axios.post(baseUrl, newBlog, config);
+  console.log(token);
+  const request = axios.post(baseUrl, newBlog, {
+    headers: { Authorization: token },
+  });
   return request.then(response => response.data);
 };
 
@@ -34,9 +33,18 @@ const update = blogToUpdate => {
   const request = axios.put(
     `${baseUrl}/${id}`,
     { user, likes: likes + 1, author, title, url },
-    config
+    {
+      headers: { Authorization: token },
+    }
   );
   return request.then(response => response.data);
 };
 
-export default { create, getAll, setToken, update };
+const remove = id => {
+  const request = axios.delete(`${baseUrl}/${id}`, {
+    headers: { Authorization: token },
+  });
+  return request.then(response => response.data);
+};
+
+export default { create, getAll, remove, setToken, update };

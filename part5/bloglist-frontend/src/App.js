@@ -110,11 +110,20 @@ const App = () => {
     setBlogs(newBlogs);
   };
 
+  const removeBlog = async blog => {
+    const deletedBlog = await blogService.remove(blog.id);
+    console.log(deletedBlog);
+    const blogIndex = blogs.findIndex(oldBlog => oldBlog.id === blog.id);
+    const newBlogs = [...blogs];
+    newBlogs.splice(blogIndex, 1);
+    setBlogs(newBlogs);
+  };
+
   const blogsList = () => {
     return (
       <div>
         {sortedBlogs.map(blog => (
-          <Blog key={blog.id} blog={blog} likeBlog={likeBlog} />
+          <Blog key={blog.id} blog={blog} likeBlog={likeBlog} remove={removeBlog} user={user} />
         ))}
       </div>
     );
