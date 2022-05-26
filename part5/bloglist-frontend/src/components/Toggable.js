@@ -29,4 +29,6 @@ Toggable.propTypes = {
   label: PropTypes.string.isRequired,
 };
 
+Toggable.displayName = "Toggable";
+
 export default Toggable;

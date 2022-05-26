@@ -1,6 +1,6 @@
 import Notification from "./Notification";
 
-const LoginForm = ({username, setUsername, password, setPassword, handleLogin, notification}) => {
+const LoginForm = ({ username, setUsername, password, setPassword, handleLogin, notification }) => {
   return (
     <div>
       <h2>log in to application</h2>
