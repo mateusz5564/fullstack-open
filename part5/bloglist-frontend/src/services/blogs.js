@@ -13,7 +13,6 @@ const getAll = () => {
 };
 
 const create = newBlog => {
-  console.log(token);
   const request = axios.post(baseUrl, newBlog, {
     headers: { Authorization: token },
   });

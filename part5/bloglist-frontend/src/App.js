@@ -5,6 +5,7 @@ import loginService from "./services/login";
 import Notification from "./components/Notification";
 import Toggable from "./components/Toggable";
 import BlogForm from "./components/BlogForm";
+import LoginForm from "./components/LoginForm";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -60,40 +61,6 @@ const App = () => {
     setUser(null);
   };
 
-  const loginForm = () => {
-    return (
-      <div>
-        <h2>log in to application</h2>
-        {notification && (
-          <Notification type={notification.type}>{notification.message}</Notification>
-        )}
-        <form onSubmit={handleLogin}>
-          <div>
-            <label>
-              username
-              <input
-                type="text"
-                value={username}
-                onChange={({ target }) => setUsername(target.value)}
-              />
-            </label>
-          </div>
-          <div>
-            <label>
-              password
-              <input
-                type="password"
-                value={password}
-                onChange={({ target }) => setPassword(target.value)}
-              />
-            </label>
-          </div>
-          <button type="submit">login</button>
-        </form>
-      </div>
-    );
-  };
-
   const createBlog = async blog => {
     const newBlog = await blogService.create(blog);
     setBlogs(blogs.concat(newBlog));
@@ -130,7 +97,16 @@ const App = () => {
   };
 
   if (user === null) {
-    return loginForm();
+    return (
+      <LoginForm
+        username={username}
+        password={password}
+        setUsername={setUsername}
+        setPassword={setPassword}
+        handleLogin={handleLogin}
+        notification={notification}
+      />
+    );
   }
 
   return (
