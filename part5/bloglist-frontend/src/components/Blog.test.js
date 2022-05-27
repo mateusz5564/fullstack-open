@@ -43,8 +43,6 @@ describe("<Blog />", () => {
     const urlElement = screen.getByText("www.as.pl/blogs/awesome-blog");
     const likesElement = screen.getByText("likes 2");
 
-    screen.debug()
-
     expect(urlElement).toBeDefined();
     expect(likesElement).toBeDefined();
   });
