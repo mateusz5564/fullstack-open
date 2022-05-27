@@ -24,8 +24,10 @@ describe("<Blog />", () => {
     username: "mateusz5564",
   };
 
+  const mockLikeBlogHandler = jest.fn();
+
   beforeEach(() => {
-    render(<Blog blog={blog} user={user} likeBlog={() => true} remove={() => true} />);
+    render(<Blog blog={blog} user={user} likeBlog={mockLikeBlogHandler} remove={() => true} />);
   });
 
   test("initially displays only the blog's title and author", () => {
@@ -41,7 +43,18 @@ describe("<Blog />", () => {
     const urlElement = screen.getByText("www.as.pl/blogs/awesome-blog");
     const likesElement = screen.getByText("likes 2");
 
+    screen.debug()
+
     expect(urlElement).toBeDefined();
     expect(likesElement).toBeDefined();
+  });
+
+  test("clicking the like button twice calls the event handler twice", async () => {
+    const user = userEvent.setup();
+    const likeButton = screen.getByText("like");
+    await user.click(likeButton);
+    await user.click(likeButton);
+
+    expect(mockLikeBlogHandler.mock.calls).toHaveLength(2);
   });
 });
