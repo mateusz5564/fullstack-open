@@ -8,9 +8,9 @@ describe("<BlogForm />", () => {
     const mockHandler = jest.fn();
     render(<BlogForm createBlog={mockHandler} />);
     const createButton = screen.getByText("create");
-    const titleInput = screen.getByTestId("title_input");
-    const authorInput = screen.getByTestId("author_input");
-    const urlInput = screen.getByTestId("url_input");
+    const titleInput = screen.getByTestId("title-input");
+    const authorInput = screen.getByTestId("author-input");
+    const urlInput = screen.getByTestId("url-input");
 
     const user = userEvent.setup();
     await user.type(titleInput, "Test Title");

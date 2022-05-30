@@ -10,7 +10,7 @@ describe("Blog app", function () {
     cy.visit("http://localhost:3000");
   });
 
-  it("displays the login form by default", function () {
+  it("Displays the login form by default", function () {
     cy.contains("login");
   });
 
@@ -22,12 +22,27 @@ describe("Blog app", function () {
       cy.contains("mateusz5564 logged in");
     });
 
-    it("fails with wrong credentials", function () {
+    it("Fails with wrong credentials", function () {
       cy.get("#username").type("mateusz5564");
       cy.get("#password").type("wrong");
       cy.get("#login-button").click();
       cy.contains("invalid username or password");
       cy.get(".error").should("have.css", "color", "rgb(255, 0, 0)");
+    });
+  });
+
+  describe("When logged in", function () {
+    beforeEach(function () {
+      cy.login("mateusz5564", "12345678");
+    });
+
+    it("A blog can be created", function () {
+      cy.contains("new blog").click();
+      cy.get("[data-testid=\"title-input\"]").type("Awesome blog title");
+      cy.get("[data-testid=\"author-input\"]").type("John Doe");
+      cy.get("[data-testid=\"url-input\"]").type("www.test.com");
+      cy.get("[data-testid=\"add-blog-button\"]").click();
+      cy.contains("Awesome blog title");
     });
   });
 });
