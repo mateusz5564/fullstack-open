@@ -7,7 +7,13 @@ describe("Blog app", function () {
       username: "mateusz5564",
       password: "12345678",
     };
+    const user2 = {
+      name: "Adam Nowak",
+      username: "adam",
+      password: "qwerty",
+    };
     cy.request("POST", "http://localhost:3003/api/users", user);
+    cy.request("POST", "http://localhost:3003/api/users", user2);
     cy.visit("http://localhost:3000");
   });
 
@@ -43,7 +49,7 @@ describe("Blog app", function () {
       cy.get('[data-testid="author-input"]').type("John Doe");
       cy.get('[data-testid="url-input"]').type("www.test.com");
       cy.get('[data-testid="add-blog-button"]').click();
-      cy.get('#blogs-list').contains("Awesome blog title");
+      cy.get("#blogs-list").contains("Awesome blog title");
     });
 
     describe("And several blogs exist", function () {
@@ -63,13 +69,42 @@ describe("Blog app", function () {
           "David Walsh",
           "https://davidwalsh.name/confessions-xix"
         );
+        cy.logout();
+        cy.login("adam", "qwerty");
+        cy.createBlog(
+          "localStorage in JavaScript: A complete guide",
+          "Nosa Obaseki",
+          "https://blog.logrocket.com/localstorage-javascript-complete-guide/#removeitem"
+        );
+        cy.logout();
+        cy.login("mateusz5564", "12345678");
       });
 
       it("A blog can be liked", function () {
-        cy.get("#blogs-list").contains("Building The Real App With React Query").as("newBlog");
-        cy.get("@newBlog").contains("view").click();
-        cy.get("@newBlog").contains("like").click().wait(200).click().wait(200).click().wait(200);
-        cy.get("@newBlog").contains("likes 3");
+        cy.get("#blogs-list").contains("Building The Real App With React Query").as("blogToLike");
+        cy.get("@blogToLike").contains("view").click();
+        cy.get("@blogToLike")
+          .contains("like")
+          .click()
+          .wait(200)
+          .click()
+          .wait(200)
+          .click()
+          .wait(200);
+        cy.get("@blogToLike").contains("likes 3");
+      });
+
+      it("User can delete his blogs", function () {
+        cy.get("#blogs-list").contains("Confessions of a Web Developer XIX").as("blogToDelete");
+        cy.get("@blogToDelete").contains("view").click();
+        cy.get("@blogToDelete").get(".remove-btn").click();
+        cy.get("#blogs-list").should("not.contain", "Confessions of a Web Developer XIX");
+      });
+
+      it("User can't delete not his own blogs", function () {
+        cy.get("#blogs-list").contains("localStorage in JavaScript: A complete guide").as("blogNotOwn");
+        cy.get("@blogNotOwn").contains("view").click();
+        cy.get("@blogNotOwn").get(".remove-btn").should("not.exist");
       });
     });
   });

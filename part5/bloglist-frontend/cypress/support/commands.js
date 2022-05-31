@@ -12,6 +12,11 @@ Cypress.Commands.add("login", (username, password) => {
   cy.visit("http://localhost:3000");
 });
 
+Cypress.Commands.add("logout", () => {
+  window.localStorage.removeItem("user");
+  cy.visit("http://localhost:3000");
+});
+
 Cypress.Commands.add("createBlog", (title, author, url) => {
   cy.request({
     method: "POST",
