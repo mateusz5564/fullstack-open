@@ -86,11 +86,11 @@ describe("Blog app", function () {
         cy.get("@blogToLike")
           .contains("like")
           .click()
-          .wait(200)
+          .wait(100)
           .click()
-          .wait(200)
+          .wait(100)
           .click()
-          .wait(200);
+          .wait(100);
         cy.get("@blogToLike").contains("likes 3");
       });
 
@@ -105,6 +105,13 @@ describe("Blog app", function () {
         cy.get("#blogs-list").contains("localStorage in JavaScript: A complete guide").as("blogNotOwn");
         cy.get("@blogNotOwn").contains("view").click();
         cy.get("@blogNotOwn").get(".remove-btn").should("not.exist");
+      });
+
+      it.only("blogs are rendered according to likes", function () {
+        cy.get("#blogs-list").contains("localStorage in JavaScript: A complete guide").contains("like").click().wait(100).click();
+        cy.get("#blogs-list").contains("Building The Real App With React Query").contains("like").click().wait(100);
+        cy.get(".blog").eq(0).should("contain", "localStorage in JavaScript: A complete guide");
+        cy.get(".blog").eq(1).should("contain", "Building The Real App With React Query");
       });
     });
   });
