@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 describe("Blog app", function () {
   beforeEach(function () {
     cy.request("POST", "http://localhost:3003/api/testing/reset");
@@ -15,7 +16,7 @@ describe("Blog app", function () {
   });
 
   describe("Login", function () {
-    it("succedes with correct credentials", function () {
+    it("Succedes with correct credentials", function () {
       cy.get("#username").type("mateusz5564");
       cy.get("#password").type("12345678");
       cy.get("#login-button").click();
@@ -38,11 +39,38 @@ describe("Blog app", function () {
 
     it("A blog can be created", function () {
       cy.contains("new blog").click();
-      cy.get("[data-testid=\"title-input\"]").type("Awesome blog title");
-      cy.get("[data-testid=\"author-input\"]").type("John Doe");
-      cy.get("[data-testid=\"url-input\"]").type("www.test.com");
-      cy.get("[data-testid=\"add-blog-button\"]").click();
-      cy.contains("Awesome blog title");
+      cy.get('[data-testid="title-input"]').type("Awesome blog title");
+      cy.get('[data-testid="author-input"]').type("John Doe");
+      cy.get('[data-testid="url-input"]').type("www.test.com");
+      cy.get('[data-testid="add-blog-button"]').click();
+      cy.get('#blogs-list').contains("Awesome blog title");
+    });
+
+    describe("And several blogs exist", function () {
+      beforeEach(function () {
+        cy.createBlog(
+          "How to Center a Div with CSS",
+          "Ihechikara Vincent Abba",
+          "https://www.freecodecamp.org/news/how-to-center-a-div-with-css/"
+        );
+        cy.createBlog(
+          "Building The Real App With React Query",
+          "Georgii Perepecho",
+          "https://www.smashingmagazine.com/2022/01/building-real-app-react-query/"
+        );
+        cy.createBlog(
+          "Confessions of a Web Developer XIX",
+          "David Walsh",
+          "https://davidwalsh.name/confessions-xix"
+        );
+      });
+
+      it("A blog can be liked", function () {
+        cy.get("#blogs-list").contains("Building The Real App With React Query").as("newBlog");
+        cy.get("@newBlog").contains("view").click();
+        cy.get("@newBlog").contains("like").click().wait(200).click().wait(200).click().wait(200);
+        cy.get("@newBlog").contains("likes 3");
+      });
     });
   });
 });

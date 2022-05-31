@@ -88,7 +88,7 @@ const App = () => {
 
   const blogsList = () => {
     return (
-      <div>
+      <div id="blogs-list">
         {sortedBlogs.map(blog => (
           <Blog key={blog.id} blog={blog} likeBlog={likeBlog} remove={removeBlog} user={user} />
         ))}
