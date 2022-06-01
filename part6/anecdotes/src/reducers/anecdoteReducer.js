@@ -31,18 +31,30 @@ const reducer = (state = initialState, action) => {
         anecdote.id === anecdoteVotedFor.id ? anecdoteVotedFor : anecdote
       );
       return newState;
+    case "ADD_NOTE":
+      const newAnecdote = {
+        content: action.data.content,
+        id: getId(),
+        votes: 0,
+      };
+      return state.concat(newAnecdote);
     default:
       return state;
   }
 };
 
-export const voteForAnecdote = id => {
-  return {
-    type: "VOTE",
-    data: {
-      id,
-    },
-  };
-};
+export const voteForAnecdote = id => ({
+  type: "VOTE",
+  data: {
+    id,
+  },
+});
+
+export const addNote = content => ({
+  type: "ADD_NOTE",
+  data: {
+    content,
+  },
+});
 
 export default reducer;
