@@ -12,4 +12,4 @@ const createAnecdote = async content => {
   return response.data;
 };
 
-export { createAnecdote, getAll };
+export default { createAnecdote, getAll };
