@@ -7,9 +7,14 @@ const getAll = async () => {
   return response.data;
 };
 
-const createAnecdote = async content => {
+const postAnecdote = async content => {
   const response = await axios.post(`${baseUrl}/anecdotes`, { content, votes: 0 });
   return response.data;
 };
 
-export default { createAnecdote, getAll };
+const voteForAnecdote = async anecdote => {
+  const response = await axios.patch(`${baseUrl}/anecdotes/${anecdote.id}`, {votes: anecdote.votes + 1});
+  return response.data;
+};
+
+export default { voteForAnecdote, postAnecdote, getAll };
