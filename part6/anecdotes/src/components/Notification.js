@@ -12,7 +12,7 @@ const Notification = ({ notification }) => {
 };
 
 const mapStateToProps = ({ notification }) => ({
-  notification,
+  notification: notification.text,
 });
 
 export default connect(mapStateToProps)(Notification);
