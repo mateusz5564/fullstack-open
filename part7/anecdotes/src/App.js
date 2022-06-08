@@ -78,7 +78,7 @@ const Footer = () => (
 );
 
 const CreateNew = props => {
-  const content = useField("content")
+  const content = useField("content");
   const author = useField("author");
   const info = useField("info");
 
@@ -99,6 +99,12 @@ const CreateNew = props => {
     navigate("/");
   };
 
+  const handleClear = e => {
+    content.clear();
+    author.clear();
+    info.clear();
+  };
+
   return (
     <div>
       <h2>create a new anecdote</h2>
@@ -113,9 +119,10 @@ const CreateNew = props => {
         </div>
         <div>
           url for more info
-          <input {...info}/>
+          <input {...info} />
         </div>
         <button>create</button>
+        <button type="reset" onClick={handleClear}>clear</button>
       </form>
     </div>
   );
