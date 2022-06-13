@@ -1,12 +1,13 @@
 import Notification from "./Notification";
+import { useSelector } from "react-redux/es/exports";
 
-const LoginForm = ({ username, setUsername, password, setPassword, handleLogin, notification }) => {
+const LoginForm = ({ username, setUsername, password, setPassword, handleLogin }) => {
+  const notification = useSelector(state => state.notification);
+
   return (
     <div>
       <h2>log in to application</h2>
-      {notification && (
-        <Notification type={notification.type}>{notification.message}</Notification>
-      )}
+      {notification && <Notification type={notification.type}>{notification.message}</Notification>}
       <form onSubmit={handleLogin}>
         <div>
           <label>
@@ -30,7 +31,9 @@ const LoginForm = ({ username, setUsername, password, setPassword, handleLogin, 
             />
           </label>
         </div>
-        <button id="login-button" type="submit">login</button>
+        <button id="login-button" type="submit">
+          login
+        </button>
       </form>
     </div>
   );
