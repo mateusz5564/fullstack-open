@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setNotification } from "./reducers/notificationReducer";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
@@ -12,7 +14,8 @@ const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [notification, setNotification] = useState(null);
+  const dispatch = useDispatch();
+  const notification = useSelector(state => state.notification);
 
   const newBlogToggleBtnRef = useRef();
 
@@ -32,12 +35,14 @@ const App = () => {
   const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes);
 
   const showNotification = (type, message) => {
-    setNotification({
-      type,
-      message,
-    });
+    dispatch(
+      setNotification({
+        type,
+        message,
+      })
+    );
     setTimeout(() => {
-      setNotification(null);
+      dispatch(setNotification(null));
     }, 5000);
   };
 
