@@ -9,9 +9,14 @@ const blogReducer = createSlice({
     addBlog: (state, action) => {
       state.push(action.payload);
     },
-    setBlogs: (state, action) => (state = action.payload),
+    deleteBlog: (state, action) => state.filter(blog => blog.id !== action.payload.id),
+    likeBlog: (state, action) => {
+      const blogIndex = state.findIndex(blog => blog.id === action.payload.id);
+      state[blogIndex].likes = action.payload.likes;
+    },
+    setBlogs: (state, action) => action.payload,
   },
 });
 
-export const { addBlog, setBlogs } = blogReducer.actions;
+export const { addBlog, deleteBlog, likeBlog, setBlogs } = blogReducer.actions;
 export default blogReducer.reducer;

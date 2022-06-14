@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setNotification } from "./reducers/notificationReducer";
-import { addBlog, setBlogs } from "./reducers/blogReducer";
+import { addBlog, deleteBlog, likeBlog, setBlogs } from "./reducers/blogReducer";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
@@ -17,7 +17,6 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
-  console.log(blogs);
   const newBlogToggleBtnRef = useRef();
 
   useEffect(() => {
@@ -74,29 +73,28 @@ const App = () => {
     newBlogToggleBtnRef.current.toggleVisibility();
   };
 
-  const likeBlog = async blog => {
+  const handleLikeBlog = async blog => {
     const updatedBlog = await blogService.update(blog);
     showNotification("success", `you liked ${updatedBlog.title} by ${updatedBlog.author}`);
-    const blogIndex = blogs.findIndex(blog => blog.id === updatedBlog.id);
-    const newBlogs = [...blogs];
-    newBlogs[blogIndex] = updatedBlog;
-    setBlogs(newBlogs);
+    dispatch(likeBlog(updatedBlog));
   };
 
-  const removeBlog = async blog => {
-    const deletedBlog = await blogService.remove(blog.id);
-    console.log(deletedBlog);
-    const blogIndex = blogs.findIndex(oldBlog => oldBlog.id === blog.id);
-    const newBlogs = [...blogs];
-    newBlogs.splice(blogIndex, 1);
-    setBlogs(newBlogs);
+  const handleDeleteBlog = async blog => {
+    await blogService.remove(blog.id);
+    dispatch(deleteBlog(blog));
   };
 
   const blogsList = () => {
     return (
       <div id="blogs-list">
         {sortedBlogs.map(blog => (
-          <Blog key={blog.id} blog={blog} likeBlog={likeBlog} remove={removeBlog} user={user} />
+          <Blog
+            key={blog.id}
+            blog={blog}
+            handleLikeBlog={handleLikeBlog}
+            handleDeleteBlog={handleDeleteBlog}
+            user={user}
+          />
         ))}
       </div>
     );
