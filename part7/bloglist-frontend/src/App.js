@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setNotification } from "./reducers/notificationReducer";
 import { addBlog, deleteBlog, likeBlog, setBlogs } from "./reducers/blogReducer";
+import { login, logout } from "./reducers/userReducer";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
@@ -11,7 +12,7 @@ import BlogForm from "./components/BlogForm";
 import LoginForm from "./components/LoginForm";
 
 const App = () => {
-  const [user, setUser] = useState(null);
+  const user = useSelector(state => state.user);
   const blogs = useSelector(state => state.blogs);
   const notification = useSelector(state => state.notification);
   const [username, setUsername] = useState("");
@@ -27,7 +28,7 @@ const App = () => {
     const userJSON = window.localStorage.getItem("user");
     if (userJSON) {
       const user = JSON.parse(userJSON);
-      setUser(user);
+      dispatch(login(user));
       blogService.setToken(user.token);
     }
   }, []);
@@ -52,7 +53,7 @@ const App = () => {
       const user = await loginService.login({ username, password });
       window.localStorage.setItem("user", JSON.stringify(user));
       blogService.setToken(user.token);
-      setUser(user);
+      dispatch(login(user));
       setUsername("");
       setPassword("");
     } catch (err) {
@@ -63,7 +64,7 @@ const App = () => {
 
   const handleLogout = () => {
     window.localStorage.removeItem("user");
-    setUser(null);
+    dispatch(logout());
   };
 
   const createBlog = async blog => {
