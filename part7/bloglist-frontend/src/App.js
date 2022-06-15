@@ -1,18 +1,20 @@
 import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Routes, Route } from "react-router-dom";
 import { setNotification } from "./reducers/notificationReducer";
 import { addBlog, deleteBlog, likeBlog, setBlogs } from "./reducers/blogReducer";
-import { login, logout } from "./reducers/userReducer";
+import { login, logout } from "./reducers/authReducer";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
+import Users from "./views/Users";
 import Notification from "./components/Notification";
 import Toggable from "./components/Toggable";
 import BlogForm from "./components/BlogForm";
 import LoginForm from "./components/LoginForm";
 
 const App = () => {
-  const user = useSelector(state => state.user);
+  const user = useSelector(state => state.auth);
   const blogs = useSelector(state => state.blogs);
   const notification = useSelector(state => state.notification);
   const [username, setUsername] = useState("");
@@ -25,11 +27,9 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    const userJSON = window.localStorage.getItem("user");
-    if (userJSON) {
-      const user = JSON.parse(userJSON);
+    const user = JSON.parse(window.localStorage.getItem("user"));
+    if (user) {
       dispatch(login(user));
-      blogService.setToken(user.token);
     }
   }, []);
 
@@ -52,7 +52,6 @@ const App = () => {
     try {
       const user = await loginService.login({ username, password });
       window.localStorage.setItem("user", JSON.stringify(user));
-      blogService.setToken(user.token);
       dispatch(login(user));
       setUsername("");
       setPassword("");
@@ -81,6 +80,7 @@ const App = () => {
   };
 
   const handleDeleteBlog = async blog => {
+    console.log(blog);
     await blogService.remove(blog.id);
     dispatch(deleteBlog(blog));
   };
@@ -121,10 +121,20 @@ const App = () => {
       <p>
         {user.username} logged in <button onClick={handleLogout}>logout</button>
       </p>
-      <Toggable ref={newBlogToggleBtnRef} label="new blog">
-        <BlogForm createBlog={createBlog} />
-      </Toggable>
-      {blogsList()}
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <Toggable ref={newBlogToggleBtnRef} label="new blog">
+                <BlogForm createBlog={createBlog} />
+              </Toggable>
+              {blogsList()}
+            </>
+          }
+        />
+        <Route path="users" element={<Users />} />
+      </Routes>
     </>
   );
 };
