@@ -1,8 +1,26 @@
-import Notification from "./Notification";
-import { useSelector } from "react-redux/es/exports";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../reducers/authReducer";
+import { showNotification } from "../reducers/notificationReducer";
+import Notification from "../components/Notification";
 
-const LoginForm = ({ username, setUsername, password, setPassword, handleLogin }) => {
+const Login = () => {
   const notification = useSelector(state => state.notification);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+
+  const handleLogin = async e => {
+    e.preventDefault();
+    try {
+      dispatch(login(username, password));
+      setUsername("");
+      setPassword("");
+    } catch (err) {
+      dispatch(showNotification("error", "invalid username or password"));
+      console.error("login error");
+    }
+  };
 
   return (
     <div>
@@ -39,4 +57,4 @@ const LoginForm = ({ username, setUsername, password, setPassword, handleLogin }
   );
 };
 
-export default LoginForm;
+export default Login;
