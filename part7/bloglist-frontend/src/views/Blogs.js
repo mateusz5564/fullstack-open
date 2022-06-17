@@ -1,8 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import blogService from "../services/blogs";
-import { addBlog, deleteBlog, likeBlog, setBlogs } from "../reducers/blogReducer";
-import { showNotification } from "../reducers/notificationReducer";
+import { createBlog, deleteBlog, likeBlog, getAllBlogs } from "../reducers/blogReducer";
 import Toggable from "../components/Toggable";
 import BlogForm from "../components/BlogForm";
 import Blog from "../components/Blog";
@@ -14,26 +12,21 @@ const Blogs = () => {
   const newBlogToggleBtnRef = useRef();
 
   useEffect(() => {
-    blogService.getAll().then(blogs => dispatch(setBlogs(blogs)));
+    dispatch(getAllBlogs());
   }, []);
 
   const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes);
 
-  const createBlog = async blog => {
-    const newBlog = await blogService.create(blog);
-    dispatch(addBlog(newBlog));
-    dispatch(showNotification("success", `a new blog ${newBlog.title} by ${newBlog.author} added`));
+  const handleCreateBlog = blog => {
+    dispatch(createBlog(blog));
     newBlogToggleBtnRef.current.toggleVisibility();
   };
 
-  const handleLikeBlog = async blog => {
-    const updatedBlog = await blogService.update(blog);
-    dispatch(showNotification("success", `you liked ${updatedBlog.title} by ${updatedBlog.author}`));
-    dispatch(likeBlog(updatedBlog));
+  const handleLikeBlog = blog => {
+    dispatch(likeBlog(blog));
   };
 
-  const handleDeleteBlog = async blog => {
-    await blogService.remove(blog.id);
+  const handleDeleteBlog = blog => {
     dispatch(deleteBlog(blog));
   };
 
@@ -56,7 +49,7 @@ const Blogs = () => {
   return (
     <>
       <Toggable ref={newBlogToggleBtnRef} label="new blog">
-        <BlogForm createBlog={createBlog} />
+        <BlogForm handleCreateBlog={handleCreateBlog} />
       </Toggable>
       {blogsList()}
     </>

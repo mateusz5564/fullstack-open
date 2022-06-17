@@ -10,7 +10,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
 
-  const handleLogin = async e => {
+  const handleLogin = e => {
     e.preventDefault();
     try {
       dispatch(login(username, password));

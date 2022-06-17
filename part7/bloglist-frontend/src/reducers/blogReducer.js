@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import blogService from "../services/blogs";
+import { showNotification } from "./notificationReducer";
 
 const initialState = [];
 
@@ -6,17 +8,40 @@ const blogReducer = createSlice({
   name: "blog",
   initialState,
   reducers: {
-    addBlog: (state, action) => {
+    addOne: (state, action) => {
       state.push(action.payload);
     },
-    deleteBlog: (state, action) => state.filter(blog => blog.id !== action.payload.id),
-    likeBlog: (state, action) => {
+    deleteOne: (state, action) => state.filter(blog => blog.id !== action.payload.id),
+    likeOne: (state, action) => {
       const blogIndex = state.findIndex(blog => blog.id === action.payload.id);
       state[blogIndex].likes = action.payload.likes;
     },
-    setBlogs: (state, action) => action.payload,
+    setAll: (state, action) => action.payload,
   },
 });
 
-export const { addBlog, deleteBlog, likeBlog, setBlogs } = blogReducer.actions;
+export const { addOne, deleteOne, likeOne, setAll } = blogReducer.actions;
+
+export const getAllBlogs = () => async dispatch => {
+  blogService.getAll().then(blogs => dispatch(setAll(blogs)));
+};
+
+export const createBlog = blog => async dispatch => {
+  const newBlog = await blogService.create(blog);
+  dispatch(addOne(newBlog));
+  dispatch(showNotification("success", `a new blog ${newBlog.title} by ${newBlog.author} added`));
+};
+
+export const likeBlog = blog => async dispatch => {
+  const updatedBlog = await blogService.update(blog);
+  dispatch(showNotification("success", `you liked ${updatedBlog.title} by ${updatedBlog.author}`));
+  dispatch(likeOne(updatedBlog));
+};
+
+export const deleteBlog = blog => async dispatch => {
+  await blogService.remove(blog.id);
+  dispatch(deleteOne(blog));
+};
+
+
 export default blogReducer.reducer;

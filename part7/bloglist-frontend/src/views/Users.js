@@ -1,16 +1,13 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import userService from "../services/users";
-import { setUsers } from "../reducers/userReducer";
+import { getAllUsers } from "../reducers/userReducer";
 
 const Users = () => {
   const dispatch = useDispatch();
   const users = useSelector(state => state.users);
 
   useEffect(() => {
-    userService.getAll().then(users => {
-      dispatch(setUsers(users));
-    });
+    dispatch(getAllUsers(users));
   }, []);
 
   if (users.length === 0) {
@@ -24,7 +21,9 @@ const Users = () => {
         <thead>
           <tr>
             <td></td>
-            <td><b>blogs created</b></td>
+            <td>
+              <b>blogs created</b>
+            </td>
           </tr>
         </thead>
         <tbody>
