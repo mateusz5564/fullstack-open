@@ -1,13 +1,14 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllUsers } from "../reducers/userReducer";
+import { Link } from "react-router-dom";
 
 const Users = () => {
   const dispatch = useDispatch();
   const users = useSelector(state => state.users);
 
   useEffect(() => {
-    dispatch(getAllUsers(users));
+    dispatch(getAllUsers());
   }, []);
 
   if (users.length === 0) {
@@ -29,7 +30,9 @@ const Users = () => {
         <tbody>
           {users.map(user => (
             <tr key={user.id}>
-              <td>{user.name}</td>
+              <td>
+                <Link to={user.id}>{user.name}</Link>
+              </td>
               <td>{user.blogs.length}</td>
             </tr>
           ))}

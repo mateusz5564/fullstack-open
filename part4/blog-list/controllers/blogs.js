@@ -16,9 +16,9 @@ router.post("/", async (request, response) => {
   const blog = new Blog({ likes: 0, ...request.body, user: user.id });
 
   const savedBlog = await blog.save();
-  savedBlog.populate("user", { username: 1, name: 1 })
+  savedBlog.populate("user", { username: 1, name: 1 });
 
-  user.blogs = user.blogs.concat(savedBlog._id);
+  user.blogs.push(savedBlog._id);
   await user.save();
 
   response.status(201).json(savedBlog);
@@ -36,7 +36,7 @@ router.delete("/:id", async (request, response) => {
     });
   }
 
-  await Blog.findByIdAndRemove(request.params.id);
+  await Blog.deleteOne({ _id: request.params.id });
 
   response.status(204).end();
 });

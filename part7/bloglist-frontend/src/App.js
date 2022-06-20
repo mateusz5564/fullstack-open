@@ -6,6 +6,7 @@ import Blogs from "./views/Blogs";
 import Login from "./views/Login";
 import Users from "./views/Users";
 import Notification from "./components/Notification";
+import User from "./views/User";
 
 const App = () => {
   const user = useSelector(state => state.auth);
@@ -34,6 +35,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Blogs />} />
         <Route path="users" element={<Users />} />
+        <Route path="users/:userId" element={<User />} />
       </Routes>
     </>
   );
