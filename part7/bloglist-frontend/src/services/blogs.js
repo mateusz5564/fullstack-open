@@ -2,8 +2,14 @@ import axios from "axios";
 import authHeader from "./authHeader";
 
 const baseUrl = "/api/blogs";
+
 const getAll = () => {
   const request = axios.get(baseUrl);
+  return request.then(response => response.data);
+};
+
+const getOne = id => {
+  const request = axios.get(`${baseUrl}/${id}`);
   return request.then(response => response.data);
 };
 
@@ -41,4 +47,4 @@ const remove = id => {
   return request.then(response => response.data);
 };
 
-export default { create, getAll, remove, update };
+export default { create, getAll, getOne, remove, update };

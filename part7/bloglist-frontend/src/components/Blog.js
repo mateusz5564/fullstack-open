@@ -1,11 +1,20 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { deleteBlog } from "../reducers/blogReducer";
+import BlogLikeBtn from "./BlogLikeBtn";
 
-const Blog = ({ blog, handleLikeBlog, user, handleDeleteBlog }) => {
+const Blog = ({ blog, user }) => {
   const [showDetails, setShowDetails] = useState(false);
+  const dispatch = useDispatch();
 
   const toggleDetails = () => {
     setShowDetails(!showDetails);
+  };
+
+  const handleDeleteBlog = blog => {
+    dispatch(deleteBlog(blog));
   };
 
   const onDelete = () => {
@@ -16,11 +25,11 @@ const Blog = ({ blog, handleLikeBlog, user, handleDeleteBlog }) => {
 
   return (
     <div className="blog">
-      {blog.title} {blog.author}
+      <Link to={`/blogs/${blog.id}`}>
+        {blog.title} {blog.author}
+      </Link>
       <button onClick={toggleDetails}>{showDetails ? "hide" : "view"}</button>
-      <button onClick={() => handleLikeBlog(blog)} className="like-btn">
-        like
-      </button>
+      <BlogLikeBtn blog={blog} />
       {showDetails && (
         <>
           <p>{blog.url}</p>
@@ -39,9 +48,7 @@ const Blog = ({ blog, handleLikeBlog, user, handleDeleteBlog }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  handleLikeBlog: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
-  handleDeleteBlog: PropTypes.func.isRequired,
 };
 
 export default Blog;

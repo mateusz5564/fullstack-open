@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Routes, Route } from "react-router-dom";
 import { logout, setLoggedUser } from "./reducers/authReducer";
 import Blogs from "./views/Blogs";
+import BlogDetails from "./views/BlogDetails";
 import Login from "./views/Login";
 import Users from "./views/Users";
 import Notification from "./components/Notification";
@@ -34,6 +35,7 @@ const App = () => {
       </p>
       <Routes>
         <Route path="/" element={<Blogs />} />
+        <Route path="/blogs/:blogId" element={<BlogDetails />} />
         <Route path="users" element={<Users />} />
         <Route path="users/:userId" element={<User />} />
       </Routes>
