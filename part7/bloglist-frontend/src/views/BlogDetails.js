@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { getAllBlogs } from "../reducers/blogReducer";
+import { addNewComment, getAllBlogs } from "../reducers/blogReducer";
 import BlogLikeBtn from "../components/BlogLikeBtn";
 
 const Blog = () => {
+  const [comment, setComment] = useState("");
   const blogs = useSelector(state => state.blogs);
   const params = useParams();
   const dispatch = useDispatch();
@@ -16,6 +17,12 @@ const Blog = () => {
       dispatch(getAllBlogs());
     }
   }, []);
+
+  const handleAddComment = e => {
+    e.preventDefault();
+    dispatch(addNewComment(blog.id, comment));
+    setComment("");
+  };
 
   if (blogs.length > 0 && !blog) {
     return <div>Blog not found</div>;
@@ -34,6 +41,15 @@ const Blog = () => {
       </p>
       <p>added by {blog.author}</p>
       <h3>comments</h3>
+      <form onSubmit={handleAddComment}>
+        <input
+          type="text"
+          placeholder="add your comment"
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+        />
+        <button>add comment</button>
+      </form>
       <ul>
         {blog.comments.map(comment => (
           <li key={comment}>{comment}</li>

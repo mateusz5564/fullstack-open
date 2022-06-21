@@ -40,6 +40,17 @@ const update = blogToUpdate => {
   return request.then(response => response.data);
 };
 
+const addComment = (id, content) => {
+  const request = axios.post(
+    `${baseUrl}/${id}/comments`,
+    { content },
+    {
+      headers: authHeader(),
+    }
+  );
+  return request.then(response => response.data);
+};
+
 const remove = id => {
   const request = axios.delete(`${baseUrl}/${id}`, {
     headers: authHeader(),
@@ -47,4 +58,4 @@ const remove = id => {
   return request.then(response => response.data);
 };
 
-export default { create, getAll, getOne, remove, update };
+export default { addComment, create, getAll, getOne, remove, update };
