@@ -33,6 +33,12 @@ const Blog = () => {
         {blog.likes} likes <BlogLikeBtn blog={blog} />
       </p>
       <p>added by {blog.author}</p>
+      <h3>comments</h3>
+      <ul>
+        {blog.comments.map(comment => (
+          <li key={comment}>{comment}</li>
+        ))}
+      </ul>
     </div>
   );
 };

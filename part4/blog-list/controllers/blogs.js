@@ -8,10 +8,10 @@ router.get("/", async (request, response) => {
 });
 
 router.get("/:id", async (request, response) => {
-  const blog = await Blog.findById(request.params.id)
+  const blog = await Blog.findById(request.params.id);
 
   response.json(blog);
-})
+});
 
 router.post("/", async (request, response) => {
   if (!request.user) {
@@ -28,6 +28,19 @@ router.post("/", async (request, response) => {
   await user.save();
 
   response.status(201).json(savedBlog);
+});
+
+router.post("/:id/comments", async (request, response) => {
+  const blog = await Blog.findById(request.params.id);
+
+  if (!blog) {
+    return response.status(404).json({ error: "blog not found" });
+  }
+
+  blog.comments.push(request.body.content);
+  await blog.save();
+
+  response.status(201).json(blog.comments[blog.comments.length - 1]);
 });
 
 router.delete("/:id", async (request, response) => {
