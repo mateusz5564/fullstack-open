@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { deleteBlog } from "../reducers/blogReducer";
 import BlogLikeBtn from "./BlogLikeBtn";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Paper from "@mui/material/Paper";
 
 const Blog = ({ blog, user }) => {
   const [showDetails, setShowDetails] = useState(false);
@@ -24,15 +27,21 @@ const Blog = ({ blog, user }) => {
   };
 
   return (
-    <div className="blog">
-      <Link to={`/blogs/${blog.id}`}>
-        {blog.title} {blog.author}
-      </Link>
-      <button onClick={toggleDetails}>{showDetails ? "hide" : "view"}</button>
-      <BlogLikeBtn blog={blog} />
+    <Paper variant="outlined" sx={{ mt: 2, p: 2 }}>
+      <Stack direction="row" alignItems="center" spacing={2}>
+        <Link to={`/blogs/${blog.id}`}>
+          {blog.title} {blog.author}
+        </Link>
+        <Button variant="outlined" onClick={toggleDetails}>
+          {showDetails ? "hide" : "view"}
+        </Button>
+        <BlogLikeBtn blog={blog} />
+      </Stack>
       {showDetails && (
         <>
-          <p>{blog.url}</p>
+          <p>
+            <a href={blog.url}>{blog.url}</a>
+          </p>
           <p>likes {blog.likes}</p>
           <p>{blog.author}</p>
           {user.username === blog.user.username && (
@@ -42,7 +51,7 @@ const Blog = ({ blog, user }) => {
           )}
         </>
       )}
-    </div>
+    </Paper>
   );
 };
 

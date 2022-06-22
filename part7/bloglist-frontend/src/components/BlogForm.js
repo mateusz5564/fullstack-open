@@ -1,4 +1,7 @@
 import { useState } from "react";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Stack from "@mui/material/Stack";
 
 const BlogForm = ({ handleCreateBlog }) => {
   const [title, setTitle] = useState("");
@@ -17,25 +20,34 @@ const BlogForm = ({ handleCreateBlog }) => {
     <div>
       <h2>create new</h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>
-            title:
-            <input data-testid="title-input" type="text" value={title} onChange={({ target }) => setTitle(target.value)} />
-          </label>
-        </div>
-        <div>
-          <label>
-            author:
-            <input data-testid="author-input" type="text" value={author} onChange={({ target }) => setAuthor(target.value)} />
-          </label>
-        </div>
-        <div>
-          <label>
-            url:
-            <input data-testid="url-input" type="text" value={url} onChange={({ target }) => setUrl(target.value)} />
-          </label>
-        </div>
-        <button data-testid="add-blog-button" type="submit">create</button>
+        <Stack alignItems="flex-start" mb={2}>
+          <TextField
+            label="title"
+            data-testid="title-input"
+            type="text"
+            value={title}
+            onChange={({ target }) => setTitle(target.value)}
+          />
+
+          <TextField
+            label="author"
+            data-testid="author-input"
+            type="text"
+            value={author}
+            onChange={({ target }) => setAuthor(target.value)}
+          />
+
+          <TextField
+            label="url"
+            data-testid="url-input"
+            type="text"
+            value={url}
+            onChange={({ target }) => setUrl(target.value)}
+          />
+        </Stack>
+        <Button variant="contained" data-testid="add-blog-button" type="submit">
+          create
+        </Button>
       </form>
     </div>
   );

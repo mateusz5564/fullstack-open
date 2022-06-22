@@ -9,6 +9,7 @@ import Users from "./views/Users";
 import User from "./views/User";
 import Notification from "./components/Notification";
 import Nav from "./components/Nav";
+import Container from "@mui/material/Container";
 
 const App = () => {
   const user = useSelector(state => state.auth);
@@ -26,14 +27,18 @@ const App = () => {
   return (
     <>
       <Nav />
-      <h1>blog app</h1>
-      {notification && <Notification type={notification.type}>{notification.message}</Notification>}
-      <Routes>
-        <Route path="/" element={<Blogs />} />
-        <Route path="/blogs/:blogId" element={<BlogDetails />} />
-        <Route path="users" element={<Users />} />
-        <Route path="users/:userId" element={<User />} />
-      </Routes>
+      <Container>
+        <h1>blog app</h1>
+        {notification && (
+          <Notification type={notification.type}>{notification.message}</Notification>
+        )}
+        <Routes>
+          <Route path="/" element={<Blogs />} />
+          <Route path="/blogs/:blogId" element={<BlogDetails />} />
+          <Route path="users" element={<Users />} />
+          <Route path="users/:userId" element={<User />} />
+        </Routes>
+      </Container>
     </>
   );
 };

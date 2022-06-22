@@ -1,5 +1,7 @@
 import { useDispatch } from "react-redux";
 import { likeBlog } from "../reducers/blogReducer";
+import Button from "@mui/material/Button";
+import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 
 const BlogLikeBtn = ({ blog }) => {
   const dispatch = useDispatch();
@@ -9,9 +11,14 @@ const BlogLikeBtn = ({ blog }) => {
   };
 
   return (
-    <button onClick={() => handleLikeBlog(blog)} className="like-btn">
+    <Button
+      variant="contained"
+      startIcon={<ThumbUpOffAltIcon />}
+      onClick={() => handleLikeBlog(blog)}
+      className="like-btn"
+    >
       like
-    </button>
+    </Button>
   );
 };
 
