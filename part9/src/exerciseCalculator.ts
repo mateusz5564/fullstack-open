@@ -14,6 +14,26 @@ interface RatingMsg {
   3: string;
 }
 
+interface ExercisesInput {
+  target: number;
+  hours: Array<number>;
+}
+
+const parseExArguments = (args: Array<string>): ExercisesInput => {
+  if (process.argv.length < 4) throw new Error("it requires at least 2 arguments");
+  const target = Number(process.argv[2]);
+  const hours = process.argv.slice(3).map(arg => Number(arg));
+
+  if (!isNaN(target) && hours.every(arg => !isNaN(arg))) {
+    return {
+      target,
+      hours,
+    };
+  } else {
+    throw new Error("average target hours and exercise hours must be numbers!");
+  }
+};
+
 const calculateTrainingDays = (hours: Array<number>): number => {
   return hours.reduce((acc, curr) => (curr > 0 ? acc + 1 : acc), 0);
 };
@@ -59,4 +79,10 @@ const calculateExercises = (hours: Array<number>, target: number): ExercisesStat
   };
 };
 
-console.log(calculateExercises([3, 0, 2, 0, 4.5, 3, 1], 2));
+try {
+  const args = parseExArguments(process.argv);
+  const { target, hours } = args;
+  console.log(calculateExercises(hours, target));
+} catch (err) {
+  console.log(err);
+}
