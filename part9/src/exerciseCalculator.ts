@@ -20,7 +20,7 @@ interface ExercisesInput {
 }
 
 const parseExArguments = (args: Array<string>): ExercisesInput => {
-  if (process.argv.length < 4) throw new Error("it requires at least 2 arguments");
+  if (args.length < 4) throw new Error("it requires at least 2 arguments");
   const target = Number(process.argv[2]);
   const hours = process.argv.slice(3).map(arg => Number(arg));
 

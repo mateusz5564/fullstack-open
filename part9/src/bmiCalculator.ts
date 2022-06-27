@@ -38,5 +38,5 @@ try {
   const bmi = calculateBMI(height, weight);
   console.log(bmi);
 } catch (error) {
-  console.log(error)
+  console.log(error);
 }
