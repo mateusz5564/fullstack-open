@@ -16,7 +16,7 @@ const parseBMIArguments = (args: Array<string>): BMIInputs => {
   }
 };
 
-const calculateBMI = (height: number, weight: number) => {
+export const calculateBMI = (height: number, weight: number) => {
   const bmi = weight / Math.pow(height / 100, 2);
 
   if (bmi < 18.5) {
@@ -40,4 +40,3 @@ try {
 } catch (error) {
   console.log(error)
 }
-
