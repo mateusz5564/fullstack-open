@@ -64,7 +64,7 @@ const getRating = (averageHours: number, target: number): [number, string] => {
   return [rating, ratingMsg[rating as keyof RatingMsg]];
 };
 
-const calculateExercises = (hours: Array<number>, target: number): ExercisesStats => {
+export const calculateExercises = (hours: Array<number>, target: number): ExercisesStats => {
   const average = calculateAverage(hours);
   const [rating, ratingDescription] = getRating(average, target);
 
