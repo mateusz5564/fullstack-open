@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { Patient } from "../types";
 import { apiBaseUrl } from "../constants";
 import { useStateValue } from "../state";
+import { addPatient } from "../state/reducer";
 
 const PatientPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -15,7 +16,7 @@ const PatientPage = () => {
   }
 
   const patient: Patient = patients[id];
-  
+
   useEffect(() => {
     const fetchPatient = async () => {
       try {
@@ -23,7 +24,7 @@ const PatientPage = () => {
           return;
         }
         const { data } = await axios.get<Patient>(`${apiBaseUrl}/patients/${id}`);
-        dispatch({ type: "ADD_PATIENT", payload: data });
+        dispatch(addPatient(data));
       } catch (err) {
         console.log(err);
       }
@@ -33,15 +34,15 @@ const PatientPage = () => {
       void fetchPatient();
     }
   }, []);
-  
-  if(!patient) {
+
+  if (!patient) {
     return <h2>Loading...</h2>;
   }
 
   return (
     <div>
       <h2>Patient {patient.name}</h2>
-      <p>ssn: {patient.ssn}</p>
+      <p>gender: {patient.gender}</p>
       <p>occupation: {patient.occupation}</p>
     </div>
   );
