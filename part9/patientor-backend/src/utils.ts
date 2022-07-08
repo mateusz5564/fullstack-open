@@ -17,7 +17,7 @@ const isDate = (date: string): boolean => {
 };
 
 const parseDateOfBirth = (date: unknown): string => {
-  if(!date || !isString(date) || !isDate(date)) {
+  if (!date || !isString(date) || !isDate(date)) {
     throw new Error("Invalid or missing date");
   }
 
@@ -30,7 +30,7 @@ const isSsn = (ssn: string): boolean => {
 };
 
 const parseSsn = (ssn: unknown): string => {
-  if(!ssn || !isString(ssn) || !isSsn(ssn)) {
+  if (!ssn || !isString(ssn) || !isSsn(ssn)) {
     throw new Error("Invalid or missing ssn");
   }
 
@@ -38,7 +38,7 @@ const parseSsn = (ssn: unknown): string => {
 };
 
 const parseOccupation = (occupation: unknown): string => {
-  if(!occupation || !isString(occupation)) {
+  if (!occupation || !isString(occupation)) {
     throw new Error("Invalid or missing occupation");
   }
 
@@ -52,11 +52,24 @@ const isGender = (gender: any): gender is Gender => {
 };
 
 const parseGender = (gender: unknown): Gender => {
-  if(!gender || !isGender(gender)) {
+  if (!gender || !isGender(gender)) {
     throw new Error("Invalid or missing gender");
   }
 
   return gender;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const isArray = (arr: any): arr is [] => {
+  return Array.isArray(arr);
+};
+
+const parseEntries = (entries: unknown): [] => {
+  if (entries && isArray(entries)) {
+    return entries;
+  }
+
+  throw new Error("Invalid or missing entires");
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -67,7 +80,7 @@ export const toNewPatient = (object: any): NewPatient => {
     ssn: parseSsn(object.ssn),
     gender: parseGender(object.gender),
     occupation: parseOccupation(object.occupation),
-    entries: [],
+    entries: parseEntries(object.entries),
   };
 
   return newPatient;
