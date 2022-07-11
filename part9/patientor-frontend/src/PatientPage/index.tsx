@@ -6,6 +6,10 @@ import { Diagnosis, Patient } from "../types";
 import { apiBaseUrl } from "../constants";
 import { useStateValue } from "../state";
 import { addPatient, setDiagnosisList } from "../state/reducer";
+import EntryDetails from "../components/EntryDetails";
+
+import { styled } from "@material-ui/core/styles";
+import Paper from "@material-ui/core/Paper";
 
 const PatientPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -46,23 +50,17 @@ const PatientPage = () => {
       <p>occupation: {patient.occupation}</p>
       <h3>entries</h3>
       {patient.entries.map(entry => (
-        <div key={entry.id}>
-          <p>
-            {entry.date} {entry.description}
-          </p>
-          {entry.diagnosisCodes && (
-            <ul>
-              {entry.diagnosisCodes.map(code => (
-                <li key={code}>
-                  {code} {diagnoses[code].name}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+        <StyledPaper key={entry.id}>
+          <EntryDetails entry={entry} />
+        </StyledPaper>
       ))}
     </div>
   );
 };
+
+const StyledPaper = styled(Paper)({
+  padding: "1px 12px",
+  margin: "12px 0",
+});
 
 export default PatientPage;
