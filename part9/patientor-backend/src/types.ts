@@ -22,7 +22,7 @@ export interface BaseEntry {
   date: string;
   specialist: string;
   description: string;
-  diagnosisCodes?: string[]
+  diagnosisCodes?: string[];
 }
 
 export interface HospitalEntry extends BaseEntry {
@@ -30,11 +30,11 @@ export interface HospitalEntry extends BaseEntry {
   discharge: {
     date: string;
     criteria: string;
-  }
+  };
 }
 
 export interface HealthCheckEntry extends BaseEntry {
-  type: "HealthCheck"
+  type: "HealthCheck";
   healthCheckRating: HealthCheckRating;
 }
 
@@ -44,7 +44,7 @@ export interface OccupationalHealthcareEntry extends BaseEntry {
   sickLeave?: {
     startDate: string;
     endDate: string;
-  }
+  };
 }
 
 export type Entry = HospitalEntry | HealthCheckEntry | OccupationalHealthcareEntry;
@@ -61,4 +61,7 @@ export interface Patient {
 
 export type PublicPatient = Omit<Patient, "ssn" | "entries">;
 
+type UnionOmit<T, K extends string | number | symbol> = T extends unknown ? Omit<T, K> : never;
+
 export type NewPatient = Omit<Patient, "id">;
+export type NewEntry = UnionOmit<Entry, "id">;

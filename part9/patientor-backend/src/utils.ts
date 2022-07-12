@@ -1,22 +1,31 @@
-import { Gender, NewPatient } from "./types";
+import { NewEntry, Gender, NewPatient, HealthCheckRating } from "./types";
 
 const isString = (text: unknown): text is string => {
   return typeof text === "string" || text instanceof String;
-};
-
-const parseName = (name: unknown): string => {
-  if (!name || !isString(name)) {
-    throw new Error("Invalid or missing name");
-  }
-
-  return name;
 };
 
 const isDate = (date: string): boolean => {
   return Boolean(Date.parse(date));
 };
 
-const parseDateOfBirth = (date: unknown): string => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const isArray = (arr: any): arr is [] => {
+  return Array.isArray(arr);
+};
+
+const isObject = (obj: any): boolean => {
+  return typeof obj === "object" && !Array.isArray(obj) && obj !== null;
+};
+
+const parseStringProperty = (property: unknown, propertyName: string): string => {
+  if (!property || !isString(property)) {
+    throw new Error(`Invalid or missing name ${propertyName}`);
+  }
+
+  return property;
+};
+
+const parseDate = (date: unknown): string => {
   if (!date || !isString(date) || !isDate(date)) {
     throw new Error("Invalid or missing date");
   }
@@ -37,14 +46,6 @@ const parseSsn = (ssn: unknown): string => {
   return ssn;
 };
 
-const parseOccupation = (occupation: unknown): string => {
-  if (!occupation || !isString(occupation)) {
-    throw new Error("Invalid or missing occupation");
-  }
-
-  return occupation;
-};
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isGender = (gender: any): gender is Gender => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
@@ -59,11 +60,6 @@ const parseGender = (gender: unknown): Gender => {
   return gender;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const isArray = (arr: any): arr is [] => {
-  return Array.isArray(arr);
-};
-
 const parseEntries = (entries: unknown): [] => {
   if (entries && isArray(entries)) {
     return entries;
@@ -72,16 +68,84 @@ const parseEntries = (entries: unknown): [] => {
   throw new Error("Invalid or missing entires");
 };
 
+const parseEntryType = (type: any): "Hospital" | "HealthCheck" | "OccupationalHealthcare" => {
+  const types = ["Hospital", "HealthCheck", "OccupationalHealthcare"];
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  if (!type || !types.includes(type)) {
+    throw new Error("Invalid or missing entry type");
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  return type;
+};
+
+const parseDischarge = (discharge: any): { date: string; criteria: string } => {
+  if (!isObject(discharge)) {
+    throw new Error("Discharge must be an object");
+  }
+
+  const date = parseDate(discharge.date);
+  const criteria = parseStringProperty(discharge.criteria, "criteria");
+
+  return {
+    date,
+    criteria,
+  };
+};
+
+const isHealthCheckRating = (rating: any): rating is HealthCheckRating => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  return Object.values(HealthCheckRating).includes(rating);
+};
+
+const parseHealthCheckRating = (rating: unknown): HealthCheckRating => {
+  if (!isHealthCheckRating(rating)) {
+    throw new Error("Missing or invalid healthcheck rating!");
+  }
+
+  return rating;
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const toNewPatient = (object: any): NewPatient => {
   const newPatient: NewPatient = {
-    name: parseName(object.name),
-    dateOfBirth: parseDateOfBirth(object.dateOfBirth),
+    name: parseStringProperty(object.name, "name"),
+    dateOfBirth: parseDate(object.dateOfBirth),
     ssn: parseSsn(object.ssn),
     gender: parseGender(object.gender),
-    occupation: parseOccupation(object.occupation),
+    occupation: parseStringProperty(object.occupation, "occupation"),
     entries: parseEntries(object.entries),
   };
 
   return newPatient;
+};
+
+export const toNewEntry = (object: any): NewEntry => {
+  const type = parseEntryType(object.type);
+  const baseEntry = {
+    date: parseDate(object.date),
+    type,
+    specialist: parseStringProperty(object.specialist, "specialist"),
+    description: parseStringProperty(object.description, "description"),
+  } as NewEntry;
+
+  if (baseEntry.type === "Hospital") {
+    const discharge = parseDischarge(object.discharge);
+    return {
+      ...baseEntry,
+      discharge,
+    };
+  } else if (baseEntry.type === "HealthCheck") {
+    return {
+      ...baseEntry,
+      healthCheckRating: parseHealthCheckRating(object.healthCheckRating),
+    };
+  } else {
+    return {
+      ...baseEntry,
+      employerName: parseStringProperty(object.employerName, "employerName"),
+    };
+  }
+
+  return baseEntry;
 };

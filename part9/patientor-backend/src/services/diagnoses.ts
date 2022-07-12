@@ -1,8 +1,8 @@
-import diagnosesData from "../../data/diagnoses";
+import diagnoses from "../../data/diagnoses";
 import { Diagnose } from "../types";
 
 const getEntries = (): Array<Diagnose> => {
-  return diagnosesData;
+  return diagnoses;
 };
 
 export default {
