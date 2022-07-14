@@ -24,7 +24,7 @@ router.get("/:id", (req, res) => {
       errorMsg += ` ${err.message}`;
     }
 
-    return res.status(400).send(errorMsg);
+    return res.status(400).send({error: errorMsg});
   }
 });
 
@@ -41,24 +41,26 @@ router.post("/", (req, res) => {
       errorMsg += ` ${err.message}`;
     }
 
-    res.status(400).send(errorMsg);
+    res.status(400).send({error: errorMsg});
   }
 });
 
 router.post("/:id/entries", (req, res) => {
+  console.log(req.body);
   try {
     const newEntry = toNewEntry(req.body);
-    patientService.addHealthEntry(req.params.id, newEntry);
+    const updatedPatient = patientService.addHealthEntry(req.params.id, newEntry);
 
-    res.json(newEntry);
+    res.json(updatedPatient);
   } catch (err) {
     let errorMsg = "Something went wrong!";
+    console.log(err);
 
     if (err instanceof Error) {
       errorMsg += ` ${err.message}`;
     }
 
-    res.status(400).send(errorMsg);
+    res.status(400).send({error: errorMsg});
   }
 });
 

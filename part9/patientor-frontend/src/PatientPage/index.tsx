@@ -1,3 +1,4 @@
+import React from "react";
 import axios from "axios";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
@@ -10,10 +11,23 @@ import EntryDetails from "../components/EntryDetails";
 
 import { styled } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
+import AddHealthEntryModal from "../AddHealthEntryModal";
+import Button from "@material-ui/core/Button";
+import { HospitalEntryFormValues } from "../AddHealthEntryModal/AddHealthEntryForm";
 
 const PatientPage = () => {
   const { id } = useParams<{ id: string }>();
   const [{ diagnoses, patients }, dispatch] = useStateValue();
+
+  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string>();
+
+  const openModal = () => setModalOpen(true);
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setError(undefined);
+  };
 
   if (!id) {
     return null;
@@ -32,6 +46,41 @@ const PatientPage = () => {
       dispatch(addPatient(patientsData));
     } catch (err) {
       console.log(err);
+    }
+  };
+
+  const submitNewHealthEntry = async ({
+    type,
+    date,
+    specialist,
+    description,
+    diagnosisCodes,
+    dischargeDate,
+    dischargeCriteria,
+  }: HospitalEntryFormValues) => {
+    try {
+      const { data } = await axios.post<Patient>(`${apiBaseUrl}/patients/${id}/entries`, {
+        type,
+        date,
+        specialist,
+        description,
+        diagnosisCodes,
+        discharge: {
+          date: dischargeDate,
+          criteria: dischargeCriteria,
+        },
+      });
+
+      dispatch(addPatient(data));
+      closeModal();
+    } catch (e: unknown) {
+      if (axios.isAxiosError(e)) {
+        console.error(e?.response?.data || "Unrecognized axios error");
+        setError(String(e?.response?.data?.error) || "Unrecognized axios error");
+      } else {
+        console.error("Unknown error", e);
+        setError("Unknown error");
+      }
     }
   };
 
@@ -54,6 +103,15 @@ const PatientPage = () => {
           <EntryDetails entry={entry} />
         </StyledPaper>
       ))}
+      <AddHealthEntryModal
+        modalOpen={modalOpen}
+        error={error}
+        onClose={closeModal}
+        onSubmit={submitNewHealthEntry}
+      />
+      <Button variant="contained" onClick={() => openModal()}>
+        Add New Entry
+      </Button>
     </div>
   );
 };

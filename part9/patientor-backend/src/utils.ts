@@ -8,11 +8,6 @@ const isDate = (date: string): boolean => {
   return Boolean(Date.parse(date));
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const isArray = (arr: any): arr is [] => {
-  return Array.isArray(arr);
-};
-
 const isObject = (obj: any): boolean => {
   return typeof obj === "object" && !Array.isArray(obj) && obj !== null;
 };
@@ -58,14 +53,6 @@ const parseGender = (gender: unknown): Gender => {
   }
 
   return gender;
-};
-
-const parseEntries = (entries: unknown): [] => {
-  if (entries && isArray(entries)) {
-    return entries;
-  }
-
-  throw new Error("Invalid or missing entires");
 };
 
 const parseEntryType = (type: any): "Hospital" | "HealthCheck" | "OccupationalHealthcare" => {
@@ -114,7 +101,7 @@ export const toNewPatient = (object: any): NewPatient => {
     ssn: parseSsn(object.ssn),
     gender: parseGender(object.gender),
     occupation: parseStringProperty(object.occupation, "occupation"),
-    entries: parseEntries(object.entries),
+    entries: [],
   };
 
   return newPatient;
